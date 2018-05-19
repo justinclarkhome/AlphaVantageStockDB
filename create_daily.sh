@@ -1,6 +1,11 @@
 # Code for (re)creating the databse on MySQL/MariaDB Server
-dbuser='myname'
-dbuserpw='myP@ssword'
+
+echo "Enter your MySQL username (and press enter):"
+read dbuser
+
+echo "Enter your MySQL password (and press enter):"
+read dbuserpw
+
 dbname='PRICES_DAILY'
 
 echo "Dropping $dbname (if it exists)"
