@@ -14,3 +14,10 @@ When identifying tickers, we also provide a datasource for each (where the secur
 The creds.yaml (in the code_python folder) holds the credentials required for each database and each datasource. This file is parsed by the Python update script when seeding/updating data. It is populated with dummy values here on GitHub.
 
 There are several "supporting" functions included that call SQL stored functions/views/procedures. These exist to feed some basic reporting features in a GUI frontend to the updater that I will include at some point as I iron out its many quirks. Arguably it is mot useful to add/delete symbols from the database on an ad-hoc basis. I may opt to simply delete these functions or move them to a separate module when the GUI eventually arrives.
+
+Installation
+* Clone the repo
+* Enter your database/API credentials in /code_python/creds_template.yaml and rename the file creds.yaml.
+* Edit /create_daily.sh and /create_intraday.sh to reflect your MySQL login details.
+* In /code_python, run "python updater.py --daily --intraday" to seed the databases.
+
