@@ -1,0 +1,13 @@
+databases:
+    PRICES_DAILY:
+        user: user
+        password: P@ssword
+        host: localhost
+    PRICES_INTRADAY:
+        user: user
+        password: P@ssword
+        host: localhost
+datasources:
+    AlphaVantage:
+        api_key: 1234567890DCBA
+        url: https://www.alphavantage.co
