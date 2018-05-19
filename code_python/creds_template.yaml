@@ -1,3 +1,5 @@
+# Rename this file "creds.yaml" after entering your specifics!
+
 databases:
     PRICES_DAILY:
         user: user
