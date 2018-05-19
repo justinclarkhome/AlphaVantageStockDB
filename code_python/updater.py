@@ -7,12 +7,15 @@ from datetime import timedelta, datetime as dt
 import time, json
 import logging
 from collections import OrderedDict
+import os
 
+# YAML file containing database login credentials (renamed from creds_template.yaml)
+cred_file = "./creds.yaml"  
+if not os.path.exists(cred_file):
+    print("creds.yaml not found: did you rename creds_template.yaml?")
+    exit
 
-cred_file = "./creds.yaml"  # YAML file containing database login credentials
-database_name = "PRICES_DAILY"
-
-
+    
 def init_logger():
     logging.basicConfig(level="INFO", format="%(asctime)s - %(levelname)s - %(message)s")
     logger = logging.getLogger()
