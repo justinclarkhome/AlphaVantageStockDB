@@ -8,12 +8,14 @@ import time, json
 import logging
 from collections import OrderedDict
 import os
+import sys
+
 
 # YAML file containing database login credentials (renamed from creds_template.yaml)
 cred_file = "./creds.yaml"  
 if not os.path.exists(cred_file):
     print("creds.yaml not found: did you rename creds_template.yaml?")
-    exit
+    sys.exit()
 
     
 def init_logger():
