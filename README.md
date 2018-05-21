@@ -1,5 +1,5 @@
 # AlphaVantageStockDB
-A simple database to hold stock price data from [AlphaVantage](www.alphavantage.co), along with some Python-based control scripts to seed/update the price data.
+A simple database to hold stock price data from [AlphaVantage](http://www.alphavantage.co), along with some Python-based control scripts to seed/update the price data.
 
 Some assumptions:
 * You have MySQL/MariaDB server installed and running, you have login credentials, and you can create/edit databases.
