@@ -11,7 +11,7 @@ This codebase is a work in progress, though functional in current form. There is
 
 When identifying tickers, we also provide a datasource for each (where the security symbol is the key of a dictionary, and the datasource is the value). This format allows for addition of additional securities from new datasources, if/when any are identified (which will require coding of price-grabbing functions specific to those providers).
 
-The creds.yaml (in the code_python folder) holds the credentials required for each database and each datasource. This file is parsed by the Python update script when seeding/updating data. It is populated with dummy values here on GitHub.
+The creds_template.yaml (in the code_python folder) should be renamed creds.yaml and then populated with the credentials required to access each database (username, password) and each datasource (website, API key). This file is parsed by the Python update script when seeding/updating data. It is populated with dummy values here on GitHub.
 
 There are several "supporting" functions included that call SQL stored functions/views/procedures. These exist to feed some basic reporting features in a GUI frontend to the updater that I will include at some point as I iron out its many quirks. Arguably it is mot useful to add/delete symbols from the database on an ad-hoc basis. I may opt to simply delete these functions or move them to a separate module when the GUI eventually arrives.
 
