@@ -17,6 +17,7 @@ There are several "supporting" functions included that call SQL stored functions
 
 Installation:
 * Clone the repo.
+* Run create_daily.sh and create_intraday.sh (the scripts will prompt you to enter your db username/password).
 * Enter your database/API credentials in /code_python/creds_template.yaml and rename the file creds.yaml.
 * In /code_python, run "python updater.py --daily --intraday" to seed the databases.
 
