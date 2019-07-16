@@ -5,7 +5,7 @@ Some assumptions:
 * You have MySQL/MariaDB server installed and running, you have login credentials, and you can create/edit databases.
 * You have an AlphaVantage API key.
 * You have Python 3.5+ installed, with the following modules installed: Pandas, Numpy, PyMySQL, PyYAML.
-* Works in bash-like terminal environments (create_*.sh on Linux, OSX) or Windows (create*.bat).
+* Works in bash-like terminal environments (.sh on Linux, OSX) or Windows (.bat).
 
 This codebase is a work in progress, though functional in current form. There is basic support for pulling intraday data from AlphaVantage and storing it (and appending new data upon subsquent updates), but notice the format of the intraday data differs from the daily data (e.g. no adjusted price/split coefficient/divident amount columns, which will be included as NaN/None when inserting, so that the format of the databases can be consistent).
 
