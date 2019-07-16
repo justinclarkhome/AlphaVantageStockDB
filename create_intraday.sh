@@ -1,4 +1,4 @@
-# Code for (re)creating the databse on MySQL/MariaDB Server
+# Code for (re)creating the database on MySQL/MariaDB Server
 
 echo "Enter your MySQL username (and press enter):"
 read dbuser
