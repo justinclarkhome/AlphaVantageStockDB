@@ -509,7 +509,7 @@ def get_symbols_from_database(sql_conn):
 
 def parse_creds(cred_file, database_name):
     with open(cred_file, "r") as f:
-        data = yaml.load(f)
+        data = yaml.load(f, Loader=yaml.FullLoader)
 
     # database creds
     db_info = {}
