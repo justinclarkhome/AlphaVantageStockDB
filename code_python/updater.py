@@ -287,6 +287,7 @@ def database_update(
                 data_source_name=data_source_name,
                 data_source_id=data_source_id,
                 data_source_info=data_source_info,
+                last_dt_in_db=last_dt_in_db,
                 update_through_date=update_through_date,
                 seed_mode=seed_mode)
 
@@ -382,6 +383,7 @@ def update_price_observations(
         data_source_name,
         data_source_id,
         data_source_info,
+        last_dt_in_db,
         update_through_date,
         seed_mode=False):
     """
@@ -410,6 +412,9 @@ def update_price_observations(
             api_key=data_source_info[data_source_name]['api_key'],
             outputsize=http_call[seed_mode],
             intraday="intraday" in str(sql_conn.db).lower())
+        # isolate the data to update
+        if last_dt_in_db is not None:
+            raw_data = raw_data[raw_data.index > last_dt_in_db]
         raw_data = raw_data[:update_through_date]  # trim
     else:
         logger("Datasource not supported: {}".format(data_source_name))
