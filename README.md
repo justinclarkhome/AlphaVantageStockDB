@@ -21,3 +21,5 @@ Installation:
 * Enter your database/API credentials in /code_python/creds_template.yaml and rename the file creds.yaml.
 * In /code_python, run "python updater.py --daily --intraday" to seed the databases.
 
+Update:
+* There's now a simple Jupyter notebook in the /code_python directory with some examples of using the database in Python/Pandas.
