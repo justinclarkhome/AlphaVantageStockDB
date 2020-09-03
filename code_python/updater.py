@@ -12,12 +12,12 @@ import sys
 
 
 # YAML file containing database login credentials (renamed from creds_template.yaml)
-cred_file = "./creds.yaml"  
+cred_file = "./creds.yaml"
 if not os.path.exists(cred_file):
     print("creds.yaml not found: did you rename creds_template.yaml?")
     sys.exit()
 
-    
+
 def init_logger():
     logging.basicConfig(level="INFO", format="%(asctime)s - %(levelname)s - %(message)s")
     logger = logging.getLogger()
@@ -97,12 +97,12 @@ def get_sp500_stocks(source_url="https://datahub.io/core/s-and-p-500-companies/r
 
 
 def get_etf_tickers(inc_stocks=True, inc_bonds=True, inc_commods=True, inc_fx=True):
-    stocks = ['QQQ', 'SPY', 'IWM', 'HDV']
-    bonds = ['HYG', 'JNK', 'TBX', 'AGG', 'BND', 'VNQ']
-    commods = ['USO']
-    fx = ['UUP']
+    stocks = ["QQQ", "SPY", "IWM", "IVW", "IWB"]
+    bonds = ["HYG", "JNK", "TBX", "AGG", "BND", "VNQ"]
+    commods = ["USO"]
+    fx = ["UUP"]
     tickers = inc_stocks * stocks + inc_bonds * bonds + inc_commods * commods + inc_fx * fx
-    tickers = {i: 'AlphaVantage' for i in sorted(tickers)}
+    tickers = {i: "AlphaVantage" for i in sorted(tickers)}
     return tickers
 
 
@@ -223,6 +223,12 @@ def database_update(
 
     start = time.time()
     ticker_list = list(tickers.keys())
+
+    # If items are removed from the ticker lists, drop them from the database.
+    to_drop = list(set(get_symbols_from_database(sql_conn)) - set(ticker_list))
+    if to_drop:
+        logger("Symbols removed from ticker list that will be deleted: {}".format(" ,".join(to_drop)))
+        [delete_existing_symbol(symbol, sql_conn=sql_conn, sql_cursor=sql_cursor, logger=logger) for symbol in to_drop]
 
     dtnow = dt.now()
     if dtnow.hour < cutoff_hour or dtnow.weekday() > 4:
