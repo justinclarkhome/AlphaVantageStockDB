@@ -485,7 +485,9 @@ def delete_existing_symbol(symbol, sql_conn, sql_cursor, logger):
     :param logger: a logging instance, e.g. logger.info or textEdit.append
     :return: no return value.
     """
-    answer = fetchone(sql_cursor, query="SELECT SecurityMetaDataID FROM SecurityMetadata WHERE SecuritySymbol='{}'".format(symbol))
+    answer = fetchone(
+        sql_cursor, 
+        query="SELECT SecurityMetaDataID FROM SecurityMetaData WHERE SecuritySymbol='{}'".format(symbol))
 
     if answer:
         logger('Deleting {} and all associated data.'.format(symbol))
