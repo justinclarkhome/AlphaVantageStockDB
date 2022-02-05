@@ -153,7 +153,7 @@ def get_alphavantage_id(sql_cursor):
     return data_source_id
 
 
-def load_data_from_alphavantage(logger, ticker, api_key, outputsize="full", intraday=False, interval='5min'):
+def load_data_from_alphavantage(logger, ticker, api_key, outputsize="full", intraday=False, interval='5min', premium=False):
     """ Pull JSON-formatted Security price data from AlphaVantage.
 
     :param ticker: the Security symbol.
@@ -170,7 +170,11 @@ def load_data_from_alphavantage(logger, ticker, api_key, outputsize="full", intr
         base_url = "{}TIME_SERIES_INTRADAY&".format(base_url)
         option_url = "symbol={}&interval={}&outputsize={}&apikey={}".format(ticker, interval, outputsize, api_key)
     else:
-        base_url = "{}TIME_SERIES_DAILY_ADJUSTED&".format(base_url)
+        if premium:
+            base_url = "{}TIME_SERIES_DAILY_ADJUSTED&".format(base_url)
+        else:
+            base_url = "{}TIME_SERIES_DAILY&".format(base_url)
+
         option_url = "symbol={}&outputsize={}&apikey={}".format(ticker, outputsize, api_key)
 
     data = json.loads(urlreq.urlopen(base_url + option_url).read().decode())
@@ -189,6 +193,11 @@ def load_data_from_alphavantage(logger, ticker, api_key, outputsize="full", intr
 
     # make sure column order is consistent with what our SQL insert expects
     columns = ["open", "high", "low", "close", "adjusted close", "volume", "dividend amount", "split coefficient"]
+
+    missing_columns = set(columns) - set(ts.columns)
+    if missing_columns:
+        ts[list(missing_columns)] = None
+
     ts = ts[columns]
 
     return ts
@@ -206,7 +215,9 @@ def database_update(
         data_source_info,
         wait_seconds=2,
         cutoff_hour=17,
-        tickers=[]):
+        alphavantage_premium=False,
+        tickers=[]
+):
     """ Main routine to seed and/or update Security price database.
 
     :param sql_conn: active SQL server connection.
@@ -295,7 +306,9 @@ def database_update(
                 data_source_info=data_source_info,
                 last_dt_in_db=last_dt_in_db,
                 update_through_date=update_through_date,
-                seed_mode=seed_mode)
+                seed_mode=seed_mode,
+                alphavantage_premium=alphavantage_premium,
+            )
 
             if wait_seconds > 0 and len(ticker_list) > 0:
                 logger("... waiting {} seconds so we don't spam the data provider's server.".format(wait_seconds))
@@ -391,7 +404,9 @@ def update_price_observations(
         data_source_info,
         last_dt_in_db,
         update_through_date,
-        seed_mode=False):
+        seed_mode=False,
+        alphavantage_premium=False,
+    ):
     """
 
     :param logger: a logging instance, e.g. logger.info or textEdit.append
@@ -417,7 +432,9 @@ def update_price_observations(
             ticker=ticker,
             api_key=data_source_info[data_source_name]['api_key'],
             outputsize=http_call[seed_mode],
-            intraday="intraday" in str(sql_conn.db).lower())
+            intraday="intraday" in str(sql_conn.db).lower(),
+            premium=alphavantage_premium,
+        )
         # isolate the data to update
         if last_dt_in_db is not None:
             raw_data = raw_data[raw_data.index > last_dt_in_db]
@@ -547,6 +564,12 @@ if __name__ == "__main__":
 
     logger = init_logger().info
 
+    # AlphaVantage has a premium endpoint, which enables pulling fields like TIME_SERIES_DAILY_ADJUSTED
+    # if you have a premium account, set the flag to True. Otherwise, set to False and premium fields
+    # will be populated with None.
+
+    alphavantage_premium = False
+
     for dbname, truefalse in args._get_kwargs():
         if truefalse:
             database_name = "PRICES_{}".format(dbname.upper())
@@ -569,5 +592,7 @@ if __name__ == "__main__":
                 sql_cursor=sql_cursor,
                 data_source_info=data_source_info,
                 wait_seconds=5,
-                tickers=tickers)
+                tickers=tickers,
+                alphavantage_premium=alphavantage_premium,
+            )
             sql_conn.close()
